@@ -9,7 +9,7 @@ def remover_colunas(database: pd.DataFrame) -> pd.DataFrame:
     colunas_para_remocao = [
     "Tema provável", "Nº do Processo da Unidade Responsável pelo Recurso", "Nº Original do Instrumento de Repasse",
     "Nº SIAFI do Instrumento de Repasse", "Unidade Gestora","Nº Siconvi", "Unidade", "Valor Original", "(c) Valor Corrigido a Ser Restituído aos Cofres Públicos (R$)",
-    "Função Programática", "code_muni", "name_muni", "code_state", "code_region", "name_state", "percent_ganhador", "Ideologia",
+    "code_muni", "name_muni", "code_state", "code_region", "name_state", "percent_ganhador", "Ideologia",
     "percent_ganhador_1996", "PERCENT_ganhador_2000", "PERCENT_ganhador_2004", "PERCENT_ganhador_2008", "PERCENT_ganhador_2012", "PERCENT_ganhador_médio",
     "Ideologia1996", "Ideologia2000", "Ideologia2004", "Ideologia2008", "ideologia 2012", "Partido 1997", "Partido_2000", "Partido_2004",
     "Partido_2008", "Partido_2012", "ideologia_media", "IDHM_2000", "IDHM_2010", "IDHM_media", "tm 2000", "tm 2004", "tm 2008", "tm2012", "tamanho setor media",
@@ -31,6 +31,7 @@ def formatar_nome_colunas(database: pd.DataFrame) -> pd.DataFrame:
     'Ministério': 'ministerio',
     'ano_provavel_contrato': 'ano_contrato',
     'Motivo da Instauração da TCE': 'motivo_instauracao_tce',
+    "Função Programática": "funcao_programatica"
     }
 
     database.rename(columns=nomes_formatados, inplace=True)
