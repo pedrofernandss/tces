@@ -74,6 +74,7 @@ def limpar_database_convenios(url) -> pd.DataFrame:
     df_tces = remover_colunas(df_tces)
     df_tces = formatar_nome_colunas(df_tces)
     df_tces = padronizar_tipos(df_tces)
+    df_tces = padronizar_nome_ministerios(df_tces)
 
     return df_tces
 
