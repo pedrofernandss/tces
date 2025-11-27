@@ -16,7 +16,8 @@ def formatar_nome_colunas(database: pd.DataFrame) -> pd.DataFrame:
         'valor_convenio_defla': 'valor_convenio_deflacionado',
         'DATA FINAL VIGÊNCIA': 'data_final_vigencia_convenio',
         'alinhamento.gov': 'alinhamento_gov',
-        'alinhamento.final': 'alinhamento_final'
+        'alinhamento.final': 'alinhamento_final',
+        "TIPO INSTRUMENTO": "tipo_instrumento"
     }
 
     database.rename(columns=nomes_formatados, inplace=True)
@@ -35,7 +36,7 @@ def remover_colunas(database: pd.DataFrame) -> pd.DataFrame:
     colunas_para_remocao = [
         "CÓDIGO SIAFI MUNICÍPIO", "NOME MUNICÍPIO", "NÚMERO ORIGINAL", "NÚMERO PROCESSO DO CONVÊNIO", "OBJETO DO CONVÊNIO",
         "CÓDIGO ÓRGÃO SUPERIOR", "CÓDIGO ÓRGÃO CONCEDENTE", "NOME ÓRGÃO CONCEDENTE", "CÓDIGO UG CONCEDENTE", "NOME UG CONCEDENTE",
-        "CÓDIGO CONVENENTE", "TIPO CONVENENTE", "NOME CONVENENTE", "TIPO ENTE CONVENENTE", "TIPO INSTRUMENTO", "VALOR CONVÊNIO",
+        "CÓDIGO CONVENENTE", "TIPO CONVENENTE", "NOME CONVENENTE", "TIPO ENTE CONVENENTE", "VALOR CONVÊNIO",
         "VALOR LIBERADO", "DATA PUBLICAÇÃO", "data_final_vigencia_convenio","DATA INÍCIO VIGÊNCIA", "DATA ÚLTIMA LIBERAÇÃO",
         "VALOR CONTRAPARTIDA", "VALOR ÚLTIMA LIBERAÇÃO", "T_INICIAL_deflac",
     ]
@@ -47,14 +48,12 @@ def remover_colunas(database: pd.DataFrame) -> pd.DataFrame:
 
 def padronizar_tipos(database: pd.DataFrame) -> pd.DataFrame:
 
-    database['ministerio'] = database['ministerio'].astype('category')
     database['numero_convenio'] = database['numero_convenio'].astype("Int64")
-    database['situacao_convenio'] = database['situacao_convenio'].astype(
-        'category')
-    database['alinhamento_gov'] = database['alinhamento_gov'].astype(
-        pd.Int8Dtype())
-    database['alinhamento_final'] = database['alinhamento_final'].astype(
-        pd.Int8Dtype())
+    database['ministerio'] = database['ministerio'].astype('category')
+    database['situacao_convenio'] = database['situacao_convenio'].astype('category')
+    database['tipo_instrumento'] = database['tipo_instrumento'].astype('category')
+    database['alinhamento_gov'] = database['alinhamento_gov'].astype(pd.Int8Dtype())
+    database['alinhamento_final'] = database['alinhamento_final'].astype(pd.Int8Dtype())
 
     return database
 
