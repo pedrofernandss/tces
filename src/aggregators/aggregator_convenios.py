@@ -57,3 +57,26 @@ def contar_convenios_por_alinhamento(dataframe: pd.DataFrame) -> pd.DataFrame:
     convenios_pivot_alinhamento.columns = [f'qntd_convenios_{mapa_alinhamento.get(col, col)}' for col in convenios_pivot_alinhamento.columns]
 
     return convenios_pivot_alinhamento
+
+
+def agregar_base_convenios(url: str) -> pd.DataFrame:
+    df_convenios = ler_dados(url)
+
+    df_conv_agg_ministerios = contar_convenios_por_ministerio(df_convenios)
+    df_conv_agg_regiao = contar_convenios_por_regiao(df_convenios)
+    df_conv_agg_situacao = contar_convenios_por_situacao(df_convenios)
+    df_conv_agg_alinhamento = contar_convenios_por_alinhamento(df_convenios)
+
+    tces_final = pd.concat([df_conv_agg_ministerios, df_conv_agg_situacao, df_conv_agg_regiao, df_conv_agg_alinhamento], axis=1)
+    tces_final = tces_final.reset_index()
+
+    return tces_final
+
+if __name__ == "__main__":
+    tces_database_url = './database/clean/convenios_clean.parquet'
+    local_salvamento = './database/aggregated/convenios_aggregated.parquet'
+
+    tces_agregado = agregar_base_convenios(tces_database_url)
+    tces_agregado.to_parquet(local_salvamento, index=False)
+
+    print(f"Base de dados agregada!")
