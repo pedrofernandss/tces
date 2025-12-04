@@ -11,3 +11,24 @@ def agrupar_qntd_convenios_ministerio(dataframe: pd.DataFrame) -> pd.DataFrame:
 
     return contagem_convenios_por_ministerio
 
+def agrupar_qntd_convenios_regiao(dataframe: pd.DataFrame) -> pd.DataFrame:
+
+    regioes = {
+        'AC': 'Norte', 'AP': 'Norte', 'AM': 'Norte', 'PA': 'Norte', 'RO': 'Norte', 'RR': 'Norte', 'TO': 'Norte',
+        'AL': 'Nordeste', 'BA': 'Nordeste', 'CE': 'Nordeste', 'MA': 'Nordeste', 'PB': 'Nordeste', 'PE': 'Nordeste', 'PI': 'Nordeste', 'RN': 'Nordeste', 'SE': 'Nordeste',
+        'DF': 'Centro-Oeste', 'GO': 'Centro-Oeste', 'MT': 'Centro-Oeste', 'MS': 'Centro-Oeste',
+        'ES': 'Sudeste', 'MG': 'Sudeste', 'RJ': 'Sudeste', 'SP': 'Sudeste',
+        'PR': 'Sul', 'RS': 'Sul', 'SC': 'Sul'
+    }
+
+    dataframe['regiao'] = dataframe['unidade_federativa'].map(regioes)
+
+    convenios_pivot_regiao = pd.crosstab(
+        index=[dataframe['ministerio'],
+        dataframe['ano_referencia']], 
+        columns=dataframe['regiao']
+    )
+
+    convenios_pivot_regiao.columns = [f'qntd_convenios_{r.lower().replace("-", "_")}' for r in convenios_pivot_regiao.columns]
+
+    return convenios_pivot_regiao
