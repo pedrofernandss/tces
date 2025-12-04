@@ -5,13 +5,13 @@ def ler_dados(url: str) -> pd.DataFrame:
 
     return tces_dataframe
 
-def agrupar_qntd_convenios_ministerio(dataframe: pd.DataFrame) -> pd.DataFrame:
+def contar_convenios_por_ministerio(dataframe: pd.DataFrame) -> pd.DataFrame:
     contagem_convenios_por_ministerio = dataframe.groupby(
     ['ministerio', 'ano_referencia']).size().reset_index(name='quantidade_convenios')
 
     return contagem_convenios_por_ministerio
 
-def agrupar_qntd_convenios_regiao(dataframe: pd.DataFrame) -> pd.DataFrame:
+def contar_convenios_por_regiao(dataframe: pd.DataFrame) -> pd.DataFrame:
 
     regioes = {
         'AC': 'Norte', 'AP': 'Norte', 'AM': 'Norte', 'PA': 'Norte', 'RO': 'Norte', 'RR': 'Norte', 'TO': 'Norte',
@@ -33,7 +33,7 @@ def agrupar_qntd_convenios_regiao(dataframe: pd.DataFrame) -> pd.DataFrame:
 
     return convenios_pivot_regiao
 
-def agrupar_situacao_convenio(dataframe: pd.DataFrame):
+def contar_convenios_por_situacao(dataframe: pd.DataFrame) -> pd.DataFrame:
         
     convenios_pivot_situacao = pd.crosstab(
         index=[dataframe['ministerio'], dataframe['ano_referencia']],
@@ -46,14 +46,13 @@ def agrupar_situacao_convenio(dataframe: pd.DataFrame):
 
     return convenios_pivot_situacao
 
-def agrupar_alinhamento(dataframe: pd.DataFrame):
+def contar_convenios_por_alinhamento(dataframe: pd.DataFrame) -> pd.DataFrame:
 
     convenios_pivot_alinhamento = pd.crosstab(
         index=[dataframe['ministerio'],dataframe['ano_referencia']],
         columns=dataframe['alinhamento_gov']
     )
 
-    # Renomeando colunas de alinhamento
     mapa_alinhamento = {0: 'nao_alinhado', 1: 'alinhado'}
     convenios_pivot_alinhamento.columns = [f'qntd_convenios_{mapa_alinhamento.get(col, col)}' for col in convenios_pivot_alinhamento.columns]
 
