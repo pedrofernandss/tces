@@ -58,16 +58,27 @@ def contar_convenios_por_alinhamento(dataframe: pd.DataFrame) -> pd.DataFrame:
 
     return convenios_pivot_alinhamento
 
+def somar_valor_convenios(dataframe: pd.DataFrame) -> pd.DataFrame: 
+    
+    df_valor_convenios_somado = dataframe.groupby(['ministerio', 'ano_referencia'])[
+        'valor_convenio_deflacionado'].sum().reset_index(name='valor_total_convenios')
+
+    
+    df_valor_convenios_somado['valor_total_convenios'] = df_valor_convenios_somado['valor_total_convenios'].round(
+        2)
+    
+    return df_valor_convenios_somado
 
 def agregar_base_convenios(url: str) -> pd.DataFrame:
     df_convenios = ler_dados(url)
 
+    df_conv_valores_somado = somar_valor_convenios(df_convenios)
     df_conv_agg_ministerios = contar_convenios_por_ministerio(df_convenios)
     df_conv_agg_regiao = contar_convenios_por_regiao(df_convenios)
     df_conv_agg_situacao = contar_convenios_por_situacao(df_convenios)
     df_conv_agg_alinhamento = contar_convenios_por_alinhamento(df_convenios)
 
-    tces_final = pd.concat([df_conv_agg_ministerios, df_conv_agg_situacao, df_conv_agg_regiao, df_conv_agg_alinhamento], axis=1)
+    tces_final = pd.concat([df_conv_agg_ministerios, df_conv_agg_situacao, df_conv_agg_regiao, df_conv_agg_alinhamento, df_conv_valores_somado], axis=1)
     tces_final = tces_final.reset_index()
 
     return tces_final
