@@ -32,3 +32,16 @@ def agrupar_qntd_convenios_regiao(dataframe: pd.DataFrame) -> pd.DataFrame:
     convenios_pivot_regiao.columns = [f'qntd_convenios_{r.lower().replace("-", "_")}' for r in convenios_pivot_regiao.columns]
 
     return convenios_pivot_regiao
+
+def agrupar_situacao_convenio(dataframe: pd.DataFrame):
+        
+    convenios_pivot_situacao = pd.crosstab(
+        index=[dataframe['ministerio'], dataframe['ano_referencia']],
+        columns=dataframe['situacao_convenio']
+    )
+
+    convenios_pivot_situacao.columns = [f'qtnd_convenios_{m.lower().replace("Ã", "A").replace("Ç", "C").replace(" ", "_")}'
+        for m in convenios_pivot_situacao.columns
+    ]
+
+    return convenios_pivot_situacao
