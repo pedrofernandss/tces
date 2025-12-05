@@ -40,12 +40,13 @@ def formatar_nome_colunas(database: pd.DataFrame) -> pd.DataFrame:
 
 def padronizar_tipos(database: pd.DataFrame) -> pd.DataFrame:
     
+    database['ministerio'] = database['ministerio'].astype(str).str.title().str.strip()
     database['ministerio'] = database['ministerio'].astype('category')
+    database['ano_referencia'] = database['ano_referencia'].astype('Int32')
     database['regiao'] = database['regiao'].astype('category')
     database['unidade_federativa'] = database['unidade_federativa'].astype('category')
     database['motivo_instauracao_tce'] = database['motivo_instauracao_tce'].astype('category')
-    database['ano_instauracao_processo_cgu'] = database['ano_instauracao_processo_cgu'].astype('Int16')
-    database['ano_referencia'] = database['ano_referencia'].astype('Int16')
+    database['ano_instauracao_processo_cgu'] = database['ano_instauracao_processo_cgu'].astype('Int32')
 
     return database
 
@@ -74,8 +75,8 @@ def limpar_database_convenios(url) -> pd.DataFrame:
     df_tces = ler_dados(url)
     df_tces = remover_colunas(df_tces)
     df_tces = formatar_nome_colunas(df_tces)
-    df_tces = padronizar_tipos(df_tces)
     df_tces = padronizar_nome_ministerios(df_tces)
+    df_tces = padronizar_tipos(df_tces)
 
     return df_tces
 

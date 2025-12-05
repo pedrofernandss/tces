@@ -26,8 +26,10 @@ def formatar_nome_colunas(database: pd.DataFrame) -> pd.DataFrame:
 
 
 def extrair_ano(database: pd.DataFrame) -> pd.DataFrame:
-    database["data_final_vigencia_convenio"] = pd.to_datetime(database["data_final_vigencia_convenio"], dayfirst=True)
-    database["ano_referencia"] = pd.DatetimeIndex(database["data_final_vigencia_convenio"]).year
+    database["data_final_vigencia_convenio"] = pd.to_datetime(
+        database["data_final_vigencia_convenio"], dayfirst=True)
+    database["ano_referencia"] = pd.DatetimeIndex(
+        database["data_final_vigencia_convenio"]).year
 
     return database
 
@@ -37,7 +39,7 @@ def remover_colunas(database: pd.DataFrame) -> pd.DataFrame:
         "CÓDIGO SIAFI MUNICÍPIO", "NOME MUNICÍPIO", "NÚMERO ORIGINAL", "NÚMERO PROCESSO DO CONVÊNIO", "OBJETO DO CONVÊNIO",
         "CÓDIGO ÓRGÃO SUPERIOR", "CÓDIGO ÓRGÃO CONCEDENTE", "NOME ÓRGÃO CONCEDENTE", "CÓDIGO UG CONCEDENTE", "NOME UG CONCEDENTE",
         "CÓDIGO CONVENENTE", "TIPO CONVENENTE", "NOME CONVENENTE", "TIPO ENTE CONVENENTE", "VALOR CONVÊNIO",
-        "VALOR LIBERADO", "DATA PUBLICAÇÃO", "data_final_vigencia_convenio","DATA INÍCIO VIGÊNCIA", "DATA ÚLTIMA LIBERAÇÃO",
+        "VALOR LIBERADO", "DATA PUBLICAÇÃO", "data_final_vigencia_convenio", "DATA INÍCIO VIGÊNCIA", "DATA ÚLTIMA LIBERAÇÃO",
         "VALOR CONTRAPARTIDA", "VALOR ÚLTIMA LIBERAÇÃO", "T_INICIAL_deflac",
     ]
 
@@ -48,12 +50,19 @@ def remover_colunas(database: pd.DataFrame) -> pd.DataFrame:
 
 def padronizar_tipos(database: pd.DataFrame) -> pd.DataFrame:
 
-    database['numero_convenio'] = database['numero_convenio'].astype("Int64")
+    database['numero_convenio'] = database['numero_convenio'].astype("Int32")
+    database['ministerio'] = database['ministerio'].astype(
+        str).str.title().str.strip()
     database['ministerio'] = database['ministerio'].astype('category')
-    database['situacao_convenio'] = database['situacao_convenio'].astype('category')
-    database['tipo_instrumento'] = database['tipo_instrumento'].astype('category')
-    database['alinhamento_gov'] = database['alinhamento_gov'].astype(pd.Int8Dtype())
-    database['alinhamento_final'] = database['alinhamento_final'].astype(pd.Int8Dtype())
+    database['ano_referencia'] = database['ano_referencia'].astype("Int64")
+    database['situacao_convenio'] = database['situacao_convenio'].astype(
+        'category')
+    database['tipo_instrumento'] = database['tipo_instrumento'].astype(
+        'category')
+    database['alinhamento_gov'] = database['alinhamento_gov'].astype(
+        pd.Int8Dtype())
+    database['alinhamento_final'] = database['alinhamento_final'].astype(
+        pd.Int8Dtype())
 
     return database
 
