@@ -34,6 +34,11 @@ def extrair_ano(database: pd.DataFrame) -> pd.DataFrame:
     return database
 
 
+def filtrar_anos(database: pd.DataFrame) -> pd.DataFrame:
+    database = database[database['ano_referencia'] <= 2018]
+    return database
+
+
 def remover_colunas(database: pd.DataFrame) -> pd.DataFrame:
     colunas_para_remocao = [
         "CÓDIGO SIAFI MUNICÍPIO", "NOME MUNICÍPIO", "NÚMERO ORIGINAL", "NÚMERO PROCESSO DO CONVÊNIO", "OBJETO DO CONVÊNIO",
@@ -51,15 +56,21 @@ def remover_colunas(database: pd.DataFrame) -> pd.DataFrame:
 def padronizar_tipos(database: pd.DataFrame) -> pd.DataFrame:
 
     database['numero_convenio'] = database['numero_convenio'].astype("Int32")
-    database['ministerio'] = database['ministerio'].astype(str).str.title().str.strip()
+    database['ministerio'] = database['ministerio'].astype(
+        str).str.title().str.strip()
     database['ministerio'] = database['ministerio'].astype('category')
     database['ano_referencia'] = database['ano_referencia'].astype("Int64")
-    database['situacao_convenio'] = database['situacao_convenio'].astype('category')
-    database['tipo_instrumento'] = database['tipo_instrumento'].astype('category')
-    database['alinhamento_gov'] = database['alinhamento_gov'].astype(pd.Int8Dtype())
-    database['alinhamento_final'] = database['alinhamento_final'].astype(pd.Int8Dtype())
+    database['situacao_convenio'] = database['situacao_convenio'].astype(
+        'category')
+    database['tipo_instrumento'] = database['tipo_instrumento'].astype(
+        'category')
+    database['alinhamento_gov'] = database['alinhamento_gov'].astype(
+        pd.Int8Dtype())
+    database['alinhamento_final'] = database['alinhamento_final'].astype(
+        pd.Int8Dtype())
 
     return database
+
 
 def padronizar_nome_ministerios(database: pd.DataFrame) -> pd.DataFrame:
 
@@ -97,15 +108,20 @@ def padronizar_nome_ministerios(database: pd.DataFrame) -> pd.DataFrame:
         "Ministério Do Meio Ambiente E Mudança Do Clima": "Ministério Do Meio Ambiente",
         "Ministério Do Planejamento E Orçamento": "Ministério Do Planejamento, Orçamento E Gestão",
         "Ministério Da Gestão E Da Inovação Em Serviços Públicos": "Ministério Do Planejamento, Orçamento E Gestão",
-        "Ministério Do Planejamento E Orçamento E Gestão": "Ministério Do Planejamento, Orçamento E Gestão",          
+        "Ministério Do Planejamento E Orçamento E Gestão": "Ministério Do Planejamento, Orçamento E Gestão",
     }
 
-    database['ministerio'] = database['ministerio'].str.replace(r'^.*[-/]\s*', '', regex=True) # Remoção dos acrónimos e o traço/barra   
-    database['ministerio'] = database['ministerio'].str.strip() # Remoção de espaços extras no início/fim e normalizar
-    database['ministerio'] = database['ministerio'].str.replace(r'Ministérioda', 'Ministério da', regex=True)
-    database['ministerio'] = database['ministerio'].str.title() # Converção de tudo para a primeira letra maiúscula e o resto minúsculo
-    database['ministerio'] = database['ministerio'].replace(relacao_nomes_ministerio)
-    
+    database['ministerio'] = database['ministerio'].str.replace(
+        r'^.*[-/]\s*', '', regex=True)  # Remoção dos acrónimos e o traço/barra
+    # Remoção de espaços extras no início/fim e normalizar
+    database['ministerio'] = database['ministerio'].str.strip()
+    database['ministerio'] = database['ministerio'].str.replace(
+        r'Ministérioda', 'Ministério da', regex=True)
+    # Converção de tudo para a primeira letra maiúscula e o resto minúsculo
+    database['ministerio'] = database['ministerio'].str.title()
+    database['ministerio'] = database['ministerio'].replace(
+        relacao_nomes_ministerio)
+
     database = database[database['ministerio'] != "Sem Informação"]
 
     return database
@@ -116,6 +132,7 @@ def limpar_database_convenios(url) -> pd.DataFrame:
     df_convenios = ler_dados(url)
     df_convenios = formatar_nome_colunas(df_convenios)
     df_convenios = extrair_ano(df_convenios)
+    df_convenios = filtrar_anos(df_convenios)
     df_convenios = remover_colunas(df_convenios)
     df_convenios = padronizar_nome_ministerios(df_convenios)
     df_convenios = padronizar_tipos(df_convenios)
