@@ -16,7 +16,7 @@ def remover_colunas(database: pd.DataFrame) -> pd.DataFrame:
     "NEP1996", "NEP2000", "NEP2004", "NEP2008", "NEP2012", "NEP_medio",
     "PIBpercapita1996","Pibpercapita2000", "Pibpercapita2004", "Pibpercapita2008", "Pibpercapita2012", "Pibpercapita_medio", 
     "TaxadeUrbanização1996", "TaxadeUrbanização2000", "TaxadeUrbanização2004", "TaxadeUrbanização2008", "TaxadeUrbanização_media", 
-    "Arrec_Prop2000", "Arrec_Prop2004", "Arrec_Prop2008", "Arrec_Prop2012", "Arrec_Prop_media", "POP", "LN_POP"
+    "Arrec_Prop2000", "Arrec_Prop2004", "Arrec_Prop2008", "Arrec_Prop2012", "Arrec_Prop_media", "POP", "LN_POP", "Função Programática"
 ]
 
     database.drop(columns=colunas_para_remocao, inplace=True)
@@ -25,13 +25,11 @@ def remover_colunas(database: pd.DataFrame) -> pd.DataFrame:
 
 def formatar_nome_colunas(database: pd.DataFrame) -> pd.DataFrame:
     nomes_formatados = {
-    'Ano da instauração do processo pela CGU': 'ano_instauracao_processo_cgu',
+    'Ano da instauração do processo pela CGU': 'ano_referencia',
     'UF.x': 'unidade_federativa',
     'name_region': 'regiao',
     'Ministério': 'ministerio',
-    'ano_provavel_contrato': 'ano_referencia',
-    'Motivo da Instauração da TCE': 'motivo_instauracao_tce',
-    "Função Programática": "funcao_programatica"
+    'Motivo da Instauração da TCE': 'motivo_instauracao_tce'
     }
 
     database.rename(columns=nomes_formatados, inplace=True)
@@ -46,7 +44,7 @@ def padronizar_tipos(database: pd.DataFrame) -> pd.DataFrame:
     database['regiao'] = database['regiao'].astype('category')
     database['unidade_federativa'] = database['unidade_federativa'].astype('category')
     database['motivo_instauracao_tce'] = database['motivo_instauracao_tce'].astype('category')
-    database['ano_instauracao_processo_cgu'] = database['ano_instauracao_processo_cgu'].astype('Int32')
+    database['ano_provavel_contrato'] = database['ano_provavel_contrato'].astype('Int32')
 
     return database
 
