@@ -15,8 +15,10 @@ def formatar_nome_colunas(database: pd.DataFrame) -> pd.DataFrame:
         'NOME ÓRGÃO SUPERIOR': 'ministerio',
         'valor_convenio_defla': 'valor_convenio_deflacionado',
         'DATA FINAL VIGÊNCIA': 'data_final_vigencia_convenio',
-        'alinhamento.gov': 'alinhamento_gov',
-        'alinhamento.final': 'alinhamento_final',
+        'alinhamento.gov.final': 'alinhamento_municipio_gov_final_contrato',
+        'alinhamento.min.pref.1': 'alinhamento_municipio_minist_final_contrato',
+        'dista.ideo.min.pref': 'distan_ideologia_municipio_minist',
+        'dista.ideo.gov.pref': 'distan_ideologia_municipio_gov_federal',
         "TIPO INSTRUMENTO": "tipo_instrumento"
     }
 
@@ -35,17 +37,17 @@ def extrair_ano(database: pd.DataFrame) -> pd.DataFrame:
 
 
 def filtrar_anos(database: pd.DataFrame) -> pd.DataFrame:
-    database = database[database['ano_referencia'] <= 2018]
+    database = database[database['ano_referencia'] <= 2016]
     return database
 
 
 def remover_colunas(database: pd.DataFrame) -> pd.DataFrame:
     colunas_para_remocao = [
-        "CÓDIGO SIAFI MUNICÍPIO", "NOME MUNICÍPIO", "NÚMERO ORIGINAL", "NÚMERO PROCESSO DO CONVÊNIO", "OBJETO DO CONVÊNIO",
+        "CÓDIGO SIAFI MUNICÍPIO", "NOME MUNICÍPIO.x", "NÚMERO ORIGINAL", "NÚMERO PROCESSO DO CONVÊNIO", "OBJETO DO CONVÊNIO",
         "CÓDIGO ÓRGÃO SUPERIOR", "CÓDIGO ÓRGÃO CONCEDENTE", "NOME ÓRGÃO CONCEDENTE", "CÓDIGO UG CONCEDENTE", "NOME UG CONCEDENTE",
         "CÓDIGO CONVENENTE", "TIPO CONVENENTE", "NOME CONVENENTE", "TIPO ENTE CONVENENTE", "VALOR CONVÊNIO",
-        "VALOR LIBERADO", "DATA PUBLICAÇÃO", "data_final_vigencia_convenio", "DATA INÍCIO VIGÊNCIA", "DATA ÚLTIMA LIBERAÇÃO",
-        "VALOR CONTRAPARTIDA", "VALOR ÚLTIMA LIBERAÇÃO", "T_INICIAL_deflac",
+        "VALOR LIBERADO", "DATA PUBLICAÇÃO", "data_final_vigencia_convenio", "DATA INÍCIO VIGÊNCIA", "DIA_FINAL", "MES_FINAL", "ANO_FINAL", "DATA ÚLTIMA LIBERAÇÃO",
+        "VALOR CONTRAPARTIDA", "VALOR ÚLTIMA LIBERAÇÃO", "T_INICIAL_deflac", "ideologia_2000", "ideologia_2004", "ideologia_2008", "ideologia_2012", "alinhamento.final"
     ]
 
     database.drop(columns=colunas_para_remocao, inplace=True)
@@ -64,10 +66,6 @@ def padronizar_tipos(database: pd.DataFrame) -> pd.DataFrame:
         'category')
     database['tipo_instrumento'] = database['tipo_instrumento'].astype(
         'category')
-    database['alinhamento_gov'] = database['alinhamento_gov'].astype(
-        pd.Int8Dtype())
-    database['alinhamento_final'] = database['alinhamento_final'].astype(
-        pd.Int8Dtype())
 
     return database
 
@@ -141,7 +139,7 @@ def limpar_database_convenios(url) -> pd.DataFrame:
 
 
 if __name__ == "__main__":
-    convenios_database_url = './database/raw/convenios_2025.parquet'
+    convenios_database_url = './database/raw/convenios.parquet'
     local_salvamento = './database/clean/convenios_clean.parquet'
 
     convenios_limpo = limpar_database_convenios(convenios_database_url)

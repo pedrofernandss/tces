@@ -8,15 +8,10 @@ def ler_dados(url: str) -> pd.DataFrame:
 def remover_colunas(database: pd.DataFrame) -> pd.DataFrame:
     colunas_para_remocao = [
     "Tema provável", "Nº do Processo da Unidade Responsável pelo Recurso", "Nº Original do Instrumento de Repasse",
-    "Nº SIAFI do Instrumento de Repasse", "Unidade Gestora","Nº Siconvi", "Unidade", "Valor Original", "(c) Valor Corrigido a Ser Restituído aos Cofres Públicos (R$)",
-    "code_muni", "name_muni", "code_state", "code_region", "name_state", "percent_ganhador", "Ideologia",
-    "percent_ganhador_1996", "PERCENT_ganhador_2000", "PERCENT_ganhador_2004", "PERCENT_ganhador_2008", "PERCENT_ganhador_2012", "PERCENT_ganhador_médio",
-    "Ideologia1996", "Ideologia2000", "Ideologia2004", "Ideologia2008", "ideologia 2012", "Partido 1997", "Partido_2000", "Partido_2004",
-    "Partido_2008", "Partido_2012", "ideologia_media", "IDHM_2000", "IDHM_2010", "IDHM_media", "tm 2000", "tm 2004", "tm 2008", "tm2012", "tamanho setor media",
-    "NEP1996", "NEP2000", "NEP2004", "NEP2008", "NEP2012", "NEP_medio",
-    "PIBpercapita1996","Pibpercapita2000", "Pibpercapita2004", "Pibpercapita2008", "Pibpercapita2012", "Pibpercapita_medio", 
-    "TaxadeUrbanização1996", "TaxadeUrbanização2000", "TaxadeUrbanização2004", "TaxadeUrbanização2008", "TaxadeUrbanização_media", 
-    "Arrec_Prop2000", "Arrec_Prop2004", "Arrec_Prop2008", "Arrec_Prop2012", "Arrec_Prop_media", "POP", "LN_POP", "Função Programática"
+    "Nº SIAFI do Instrumento de Repasse", "Unidade Gestora","Nº Siconvi", "Unidade", "Valor Original", 
+    "(c) Valor Corrigido a Ser Restituído aos Cofres Públicos (R$)",
+    "code_muni", "name_muni", "code_state", "code_region", "name_state",
+    "ideologia_2000", "ideologia_2004", "ideologia_2008", "ideologia_2012"
 ]
 
     database.drop(columns=colunas_para_remocao, inplace=True)
@@ -29,7 +24,11 @@ def formatar_nome_colunas(database: pd.DataFrame) -> pd.DataFrame:
     'UF.x': 'unidade_federativa',
     'name_region': 'regiao',
     'Ministério': 'ministerio',
-    'Motivo da Instauração da TCE': 'motivo_instauracao_tce'
+    'Motivo da Instauração da TCE': 'motivo_instauracao_tce',
+    'alinhamento.min.pref.1': 'alinhamento_municipio_minist_final_contrato',
+    'dista.ideo.min.pref': 'distan_ideologia_municipio_minist',
+    'dista.ideo.gov.pref': 'distan_ideologia_municipio_gov_federal',
+    'governo_tce': 'governo_instaurador_tce'
     }
 
     database.rename(columns=nomes_formatados, inplace=True)
@@ -44,7 +43,6 @@ def padronizar_tipos(database: pd.DataFrame) -> pd.DataFrame:
     database['regiao'] = database['regiao'].astype('category')
     database['unidade_federativa'] = database['unidade_federativa'].astype('category')
     database['motivo_instauracao_tce'] = database['motivo_instauracao_tce'].astype('category')
-    database['ano_provavel_contrato'] = database['ano_provavel_contrato'].astype('Int32')
 
     return database
 
