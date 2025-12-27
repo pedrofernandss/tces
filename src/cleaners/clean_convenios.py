@@ -37,7 +37,8 @@ def extrair_ano(database: pd.DataFrame) -> pd.DataFrame:
 
 
 def filtrar_anos(database: pd.DataFrame) -> pd.DataFrame:
-    database = database[(database['ano_referencia'] >= 2002) & (database['ano_referencia'] <= 2016)]
+    database = database[(database['ano_referencia'] >= 2002)
+                        & (database['ano_referencia'] <= 2016)]
     return database
 
 
@@ -47,7 +48,8 @@ def remover_colunas(database: pd.DataFrame) -> pd.DataFrame:
         "CÓDIGO ÓRGÃO SUPERIOR", "CÓDIGO ÓRGÃO CONCEDENTE", "NOME ÓRGÃO CONCEDENTE", "CÓDIGO UG CONCEDENTE", "NOME UG CONCEDENTE",
         "CÓDIGO CONVENENTE", "TIPO CONVENENTE", "NOME CONVENENTE", "TIPO ENTE CONVENENTE", "VALOR CONVÊNIO",
         "VALOR LIBERADO", "DATA PUBLICAÇÃO", "data_final_vigencia_convenio", "DATA INÍCIO VIGÊNCIA", "DIA_FINAL", "MES_FINAL", "ANO_FINAL", "DATA ÚLTIMA LIBERAÇÃO",
-        "VALOR CONTRAPARTIDA", "VALOR ÚLTIMA LIBERAÇÃO", "T_INICIAL_deflac", "ideologia_2000", "ideologia_2004", "ideologia_2008", "ideologia_2012", "alinhamento.final"
+        "VALOR CONTRAPARTIDA", "VALOR ÚLTIMA LIBERAÇÃO", "T_INICIAL_deflac", "ideologia_2000", "ideologia_2004", "ideologia_2008", "ideologia_2012", "alinhamento.final",
+        "Partido_2000", "Partido_2004", "Partido_2008", "Partido_2012"
     ]
 
     database.drop(columns=colunas_para_remocao, inplace=True)
@@ -125,12 +127,30 @@ def padronizar_nome_ministerios(database: pd.DataFrame) -> pd.DataFrame:
     return database
 
 
+def adicionar_partido_ano_referencia(database: pd.DataFrame) -> pd.DataFrame:
+    def get_partido(row):
+        ano = row['ano_referencia']
+        if 2000 <= ano <= 2003:
+            return row['Partido_2000']
+        elif 2004 <= ano <= 2007:
+            return row['Partido_2004']
+        elif 2008 <= ano <= 2011:
+            return row['Partido_2008']
+        elif 2012 <= ano <= 2016:
+            return row['Partido_2012']
+        return None
+
+    database['partido_ano_referencia'] = database.apply(get_partido, axis=1)
+    return database
+
+
 def limpar_database_convenios(url) -> pd.DataFrame:
 
     df_convenios = ler_dados(url)
     df_convenios = formatar_nome_colunas(df_convenios)
     df_convenios = extrair_ano(df_convenios)
     df_convenios = filtrar_anos(df_convenios)
+    df_convenios = adicionar_partido_ano_referencia(df_convenios)
     df_convenios = remover_colunas(df_convenios)
     df_convenios = padronizar_nome_ministerios(df_convenios)
     df_convenios = padronizar_tipos(df_convenios)
