@@ -37,7 +37,7 @@ def extrair_ano(database: pd.DataFrame) -> pd.DataFrame:
 
 
 def filtrar_anos(database: pd.DataFrame) -> pd.DataFrame:
-    database = database[database['ano_referencia'] <= 2016]
+    database = database[(database['ano_referencia'] >= 2002) & (database['ano_referencia'] <= 2016)]
     return database
 
 
