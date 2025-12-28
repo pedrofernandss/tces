@@ -130,13 +130,13 @@ def padronizar_nome_ministerios(database: pd.DataFrame) -> pd.DataFrame:
 def adicionar_partido_ano_referencia(database: pd.DataFrame) -> pd.DataFrame:
     def get_partido(row):
         ano = row['ano_referencia']
-        if 2000 <= ano <= 2003:
+        if 2001 <= ano <= 2004:
             return row['Partido_2000']
-        elif 2004 <= ano <= 2007:
+        elif 2005 <= ano <= 2009:
             return row['Partido_2004']
-        elif 2008 <= ano <= 2011:
+        elif 20010 <= ano <= 2012:
             return row['Partido_2008']
-        elif 2012 <= ano <= 2016:
+        elif 2013 <= ano <= 2016:
             return row['Partido_2012']
         return None
 
