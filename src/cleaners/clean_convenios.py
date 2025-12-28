@@ -89,9 +89,9 @@ def padronizar_tipos(database: pd.DataFrame) -> pd.DataFrame:
 def padronizar_nome_ministerios(database: pd.DataFrame) -> pd.DataFrame:
 
     relacao_nomes_ministerio = {
-        "Ministério Da Agricultura, Pecuária E Abastecimento": "Ministério da Agricultura e Pecuária",
-        "Ministério Da Agricultura E Pecuária": "Ministério da Agricultura e Pecuária",
-        "Ministério Da Agricultura, Da Pecuária E Do Abastecimento": "Ministério da Agricultura e Pecuária",
+        "Ministério Da Agricultura, Pecuária E Abastecimento": "Ministério Da Agricultura E Pecuária",
+        "Ministério Da Agricultura E Pecuária": "Ministério Da Agricultura E Pecuária",
+        "Ministério Da Agricultura, Da Pecuária E Do Abastecimento": "Ministério Da Agricultura E Pecuária",
         "Ministério Da Ciência E Tecnologia": "Ministério da Ciência e Tecnologia",
         "Ministério Da Ciência, Tecnologia E Inovação": "Ministério da Ciência e Tecnologia",
         "Ministério Da Ciência, Tecnologia, Inovações E Comunicações": "Ministério da Ciência e Tecnologia",
@@ -102,6 +102,7 @@ def padronizar_nome_ministerios(database: pd.DataFrame) -> pd.DataFrame:
         "Ministério Do Desenvolvimento, Indústria E Comércio Exterior": "Ministério Da Indústria, Comércio Exterior E Serviços",
         "Ministério Das Mulheres": "Ministério Das Mulheres, Igualdade Racial, Da Juventude E Dos Direitos Humanos",
         "Ministério Dos Direitos Humanos E Cidadania": "Ministério Das Mulheres, Igualdade Racial, Da Juventude E Dos Direitos Humanos",
+        "Ministério Dos Povos Indígenas": "Ministério Das Mulheres, Igualdade Racial, Da Juventude E Dos Direitos Humanos",
         "Ministério Dos Direitos Humanos": "Ministério Das Mulheres, Igualdade Racial, Da Juventude E Dos Direitos Humanos",
         "Ministério Da Igualdade Racial": "Ministério Das Mulheres, Igualdade Racial, Da Juventude E Dos Direitos Humanos",
         "Ministério Da Justiça E Segurança Pública": "Ministério Da Justiça",

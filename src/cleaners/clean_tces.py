@@ -71,13 +71,13 @@ def padronizar_tipos(database: pd.DataFrame) -> pd.DataFrame:
 def padronizar_nome_ministerios(database: pd.DataFrame) -> pd.DataFrame:
 
     relacao_nomes_ministerio = {
-        "Ministério Da Agricultura, Pecuária E Abastecimento": "Ministério da Agricultura e Pecuária",
-        "Ministério Da Agricultura E Pecuária": "Ministério da Agricultura e Pecuária",
-        "Ministério Da Agricultura, Da Pecuária E Do Abastecimento": "Ministério da Agricultura e Pecuária",
-        "Ministério Da Ciência E Tecnologia": "Ministério da Ciência e Tecnologia",
-        "Ministério Da Ciência, Tecnologia E Inovação": "Ministério da Ciência e Tecnologia",
-        "Ministério Da Ciência, Tecnologia, Inovações E Comunicações": "Ministério da Ciência e Tecnologia",
-        "Ministério Da Ciência, Tec, Inov. E Com.": "Ministério da Ciência e Tecnologia",
+        "Ministério Da Agricultura, Pecuária E Abastecimento": "Ministério Da Agricultura E Pecuária",
+        "Ministério Da Agricultura E Pecuária": "Ministério Da Agricultura E Pecuária",
+        "Ministério Da Agricultura, Da Pecuária E Do Abastecimento": "Ministério Da Agricultura E Pecuária",
+        "Ministério Da Ciência E Tecnologia": "Ministério Da Ciência E Tecnologia",
+        "Ministério Da Ciência, Tecnologia E Inovação": "Ministério Da Ciência E Tecnologia",
+        "Ministério Da Ciência, Tecnologia, Inovações E Comunicações": "Ministério Da Ciência E Tecnologia",
+        "Ministério Da Ciência, Tec, Inov. E Com.": "Ministério Da Ciência E Tecnologia",
         "Ministério Da Integração E Do Desenvolvimento Regional": "Ministério Da Integração Nacional",
         "Ministério Da Indústria, Comércio Exterior E Serviços": "Ministério Da Indústria, Comércio Exterior E Serviços",
         "Ministério Do Desenvolvimento, Indústria, Comércio E Serviços": "Ministério Da Indústria, Comércio Exterior E Serviços",
