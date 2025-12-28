@@ -32,9 +32,9 @@ def agregar_motivos_instauracao_por_regiao(dataframe: pd.DataFrame):
 
     return tces_motivo_regiao
 
-def agregar_tces_por_alinhamento(dataframe: pd.DataFrame):
+def agregar_tces_por_alinhamento(dataframe: pd.DataFrame, coluna_alinhamento: str):
     tces_alinhamento = pd.crosstab(index=[dataframe['ministerio'], dataframe['ano_referencia']],
-                                columns=[dataframe['alinhamento_tce']])
+                                columns=[dataframe[coluna_alinhamento]])
 
     alinhamento = {0: 'nao_alinhado', 1: 'alinhado'}
     tces_alinhamento.columns = [f'qntd_tces_{alinhamento.get(col, col)}' for col in tces_alinhamento.columns]
@@ -42,12 +42,12 @@ def agregar_tces_por_alinhamento(dataframe: pd.DataFrame):
     return tces_alinhamento
 
 
-def agregar_base_tces(url: str) -> pd.DataFrame:
+def agregar_base_tces(url: str, coluna_alinhamento: str) -> pd.DataFrame:
     df_tces = ler_dados(url)
 
     df_tces['motivo_instauracao_tce'] = df_tces['motivo_instauracao_tce'].apply(agregar_motivos_tce)
     df_tces_agg_regiao = agregar_motivos_instauracao_por_regiao(df_tces)
-    df_tces_agg_alinhamento = agregar_tces_por_alinhamento(df_tces)
+    df_tces_agg_alinhamento = agregar_tces_por_alinhamento(df_tces, coluna_alinhamento)
 
     tces_final = pd.concat([df_tces_agg_regiao, df_tces_agg_alinhamento], axis=1)
     tces_final = tces_final.reset_index()
@@ -56,9 +56,13 @@ def agregar_base_tces(url: str) -> pd.DataFrame:
 
 if __name__ == "__main__":
     tces_database_url = './database/clean/tces_clean.parquet'
-    local_salvamento = './database/aggregated/tces_aggregated.parquet'
+    
+    local_salvamento_gov = './database/aggregated/tces_aggregated_gov.parquet'
+    tces_agregado_gov = agregar_base_tces(tces_database_url, 'alinhamento_municipio_gov_tce')
+    tces_agregado_gov.to_parquet(local_salvamento_gov, index=False)
+    print(f"Base de dados agregada (Gov) salva em {local_salvamento_gov}!")
 
-    tces_agregado = agregar_base_tces(tces_database_url)
-    tces_agregado.to_parquet(local_salvamento, index=False)
-
-    print(f"Base de dados agregada!")
+    local_salvamento_minist = './database/aggregated/tces_aggregated_minist.parquet'
+    tces_agregado_minist = agregar_base_tces(tces_database_url, 'alinhamento_municipio_minist_tce')
+    tces_agregado_minist.to_parquet(local_salvamento_minist, index=False)
+    print(f"Base de dados agregada (Minist) salva em {local_salvamento_minist}!")

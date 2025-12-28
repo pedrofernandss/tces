@@ -9,7 +9,7 @@ def ler_dados(url: str) -> pd.DataFrame:
 
 def contar_convenios_por_ministerio(dataframe: pd.DataFrame) -> pd.DataFrame:
     contagem_convenios_por_ministerio = dataframe.groupby(
-        ['ministerio', 'ano_referencia']).size().to_frame(name='quantidade_convenios')
+        ['ministerio', 'ano_referencia'], observed=True).size().to_frame(name='quantidade_convenios')
 
     return contagem_convenios_por_ministerio
 
@@ -52,11 +52,11 @@ def contar_convenios_por_situacao(dataframe: pd.DataFrame) -> pd.DataFrame:
     return convenios_pivot_situacao
 
 
-def contar_convenios_por_alinhamento(dataframe: pd.DataFrame) -> pd.DataFrame:
+def contar_convenios_por_alinhamento(dataframe: pd.DataFrame, coluna_alinhamento: str) -> pd.DataFrame:
 
     convenios_pivot_alinhamento = pd.crosstab(
         index=[dataframe['ministerio'], dataframe['ano_referencia']],
-        columns=dataframe['alinhamento_gov']
+        columns=dataframe[coluna_alinhamento]
     )
 
     mapa_alinhamento = {0: 'nao_alinhado', 1: 'alinhado'}
@@ -68,22 +68,30 @@ def contar_convenios_por_alinhamento(dataframe: pd.DataFrame) -> pd.DataFrame:
 
 def somar_valor_convenios(dataframe: pd.DataFrame) -> pd.DataFrame:
 
-    df_valor_convenios_somado = dataframe.groupby(['ministerio', 'ano_referencia'])[
+    if dataframe['valor_convenio_deflacionado'].dtype == 'object' or dataframe['valor_convenio_deflacionado'].dtype.name == 'string':
+        dataframe['valor_convenio_deflacionado'] = dataframe['valor_convenio_deflacionado'].astype(str).str.replace('.', '', regex=False).str.replace(',', '.', regex=False)
+
+    dataframe['valor_convenio_deflacionado'] = pd.to_numeric(
+        dataframe['valor_convenio_deflacionado'], errors='coerce')
+
+    df_valor_convenios_somado = dataframe.groupby(['ministerio', 'ano_referencia'], observed=True)[
         'valor_convenio_deflacionado'].sum().to_frame(name='valor_total_convenios')
 
-    df_valor_convenios_somado['valor_total_convenios'] = df_valor_convenios_somado['valor_total_convenios']
+    df_valor_convenios_somado['valor_total_convenios'] = df_valor_convenios_somado['valor_total_convenios'].astype(
+        float)
 
     return df_valor_convenios_somado
 
 
-def agregar_base_convenios(url: str) -> pd.DataFrame:
+def agregar_base_convenios(url: str, coluna_alinhamento: str) -> pd.DataFrame:
     df_convenios = ler_dados(url)
 
     df_conv_valores_somado = somar_valor_convenios(df_convenios)
     df_conv_agg_ministerios = contar_convenios_por_ministerio(df_convenios)
     df_conv_agg_regiao = contar_convenios_por_regiao(df_convenios)
     df_conv_agg_situacao = contar_convenios_por_situacao(df_convenios)
-    df_conv_agg_alinhamento = contar_convenios_por_alinhamento(df_convenios)
+    df_conv_agg_alinhamento = contar_convenios_por_alinhamento(
+        df_convenios, coluna_alinhamento)
 
     tces_final = pd.concat([df_conv_agg_ministerios, df_conv_agg_situacao,
                            df_conv_agg_regiao, df_conv_agg_alinhamento, df_conv_valores_somado], axis=1)
@@ -94,9 +102,16 @@ def agregar_base_convenios(url: str) -> pd.DataFrame:
 
 if __name__ == "__main__":
     tces_database_url = './database/clean/convenios_clean.parquet'
-    local_salvamento = './database/aggregated/convenios_aggregated.parquet'
 
-    tces_agregado = agregar_base_convenios(tces_database_url)
-    tces_agregado.to_parquet(local_salvamento, index=False)
+    local_salvamento_gov = './database/aggregated/convenios_aggregated_gov.parquet'
+    tces_agregado_gov = agregar_base_convenios(
+        tces_database_url, 'alinhamento_municipio_gov_final_contrato')
+    tces_agregado_gov.to_parquet(local_salvamento_gov, index=False)
+    print(f"Base de dados de alinhamento Gov salva em {local_salvamento_gov}!")
 
-    print(f"Base de dados agregada!")
+    local_salvamento_minist = './database/aggregated/convenios_aggregated_minist.parquet'
+    tces_agregado_minist = agregar_base_convenios(
+        tces_database_url, 'alinhamento_municipio_minist_final_contrato')
+    tces_agregado_minist.to_parquet(local_salvamento_minist, index=False)
+    print(
+        f"Base de dados de alinhamento Ministério salva em {local_salvamento_minist}!")
