@@ -1,5 +1,6 @@
 import pandas as pd
 
+
 def ler_dados(url: str) -> pd.DataFrame:
     convenios_dataframe = pd.read_parquet(url)
 
@@ -19,6 +20,7 @@ def remover_colunas(database: pd.DataFrame) -> pd.DataFrame:
     database.drop(columns=colunas_para_remocao, inplace=True, errors='ignore')
 
     return database
+
 
 def formatar_nome_colunas(database: pd.DataFrame) -> pd.DataFrame:
     nomes_formatados = {
@@ -41,6 +43,14 @@ def formatar_nome_colunas(database: pd.DataFrame) -> pd.DataFrame:
 
 def padronizar_tipos(database: pd.DataFrame) -> pd.DataFrame:
 
+    cols_to_clean = ['distan_ideologia_municipio_minist',
+                     'distan_ideologia_municipio_gov_federal']
+    for col in cols_to_clean:
+        if col in database.columns:
+            if database[col].dtype == 'object' or database[col].dtype.name == 'string':
+                database[col] = database[col].astype(str).str.replace(
+                    '.', '', regex=False).str.replace(',', '.', regex=False)
+
     database['ministerio'] = database['ministerio'].astype(
         str).str.title().str.strip()
     database['ministerio'] = database['ministerio'].astype('category')
@@ -50,6 +60,10 @@ def padronizar_tipos(database: pd.DataFrame) -> pd.DataFrame:
         'category')
     database['motivo_instauracao_tce'] = database['motivo_instauracao_tce'].astype(
         'category')
+    database['distan_ideologia_municipio_minist'] = pd.to_numeric(
+        database['distan_ideologia_municipio_minist'], errors='coerce')
+    database['distan_ideologia_municipio_gov_federal'] = pd.to_numeric(
+        database['distan_ideologia_municipio_gov_federal'], errors='coerce')
 
     return database
 
@@ -106,6 +120,7 @@ def padronizar_nome_ministerios(database: pd.DataFrame) -> pd.DataFrame:
 
     return database
 
+
 def adicionar_partido_ano_referencia(database: pd.DataFrame) -> pd.DataFrame:
     def get_partido(row):
         ano = row['ano_referencia']
@@ -121,6 +136,7 @@ def adicionar_partido_ano_referencia(database: pd.DataFrame) -> pd.DataFrame:
 
     database['partido_ano_referencia'] = database.apply(get_partido, axis=1)
     return database
+
 
 def limpar_database_convenios(url) -> pd.DataFrame:
 

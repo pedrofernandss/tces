@@ -59,6 +59,14 @@ def remover_colunas(database: pd.DataFrame) -> pd.DataFrame:
 
 def padronizar_tipos(database: pd.DataFrame) -> pd.DataFrame:
 
+    cols_to_clean = ['valor_convenio_deflacionado',
+                     'distan_ideologia_municipio_minist', 'distan_ideologia_municipio_gov_federal']
+    for col in cols_to_clean:
+        if col in database.columns:
+            if database[col].dtype == 'object' or database[col].dtype.name == 'string':
+                database[col] = database[col].astype(str).str.replace(
+                    '.', '', regex=False).str.replace(',', '.', regex=False)
+
     database['numero_convenio'] = database['numero_convenio'].astype("Int32")
     database['ministerio'] = database['ministerio'].astype(
         str).str.title().str.strip()
@@ -68,6 +76,12 @@ def padronizar_tipos(database: pd.DataFrame) -> pd.DataFrame:
         'category')
     database['tipo_instrumento'] = database['tipo_instrumento'].astype(
         'category')
+    database['distan_ideologia_municipio_minist'] = pd.to_numeric(
+        database['distan_ideologia_municipio_minist'], errors='coerce')
+    database['distan_ideologia_municipio_gov_federal'] = pd.to_numeric(
+        database['distan_ideologia_municipio_gov_federal'], errors='coerce')
+    database['valor_convenio_deflacionado'] = pd.to_numeric(
+        database['valor_convenio_deflacionado'], errors='coerce')
 
     return database
 
