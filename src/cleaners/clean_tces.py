@@ -13,8 +13,8 @@ def remover_colunas(database: pd.DataFrame) -> pd.DataFrame:
         "Nº SIAFI do Instrumento de Repasse", "Unidade Gestora", "Nº Siconvi", "Unidade", "Valor Original",
         "(c) Valor Corrigido a Ser Restituído aos Cofres Públicos (R$)",
         "code_muni", "name_muni", "code_state", "code_region", "name_state",
-        "ideologia_2000", "ideologia_2004", "ideologia_2008", "ideologia_2012",
-        "Partido_2000", "Partido_2004", "Partido_2008", "Partido_2012"
+        "ideologia_2000", "ideologia_2004", "ideologia_2008", "ideologia_2012", "Partido 1997", "alinhamento.min.pref",
+        "Partido_2000", "Partido_2004", "Partido_2008", "Partido_2012", "alinhamento_tce"
     ]
 
     database.drop(columns=colunas_para_remocao, inplace=True, errors='ignore')
@@ -126,9 +126,9 @@ def adicionar_partido_ano_referencia(database: pd.DataFrame) -> pd.DataFrame:
         ano = row['ano_referencia']
         if 2001 <= ano <= 2004:
             return row['Partido_2000']
-        elif 2005 <= ano <= 2009:
+        elif 2005 <= ano <= 2008:
             return row['Partido_2004']
-        elif 20010 <= ano <= 2012:
+        elif 2009 <= ano <= 2012:
             return row['Partido_2008']
         elif 2013 <= ano <= 2016:
             return row['Partido_2012']

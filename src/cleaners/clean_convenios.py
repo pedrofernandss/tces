@@ -147,9 +147,9 @@ def adicionar_partido_ano_referencia(database: pd.DataFrame) -> pd.DataFrame:
         ano = row['ano_referencia']
         if 2001 <= ano <= 2004:
             return row['Partido_2000']
-        elif 2005 <= ano <= 2009:
+        elif 2005 <= ano <= 2008:
             return row['Partido_2004']
-        elif 20010 <= ano <= 2012:
+        elif 2009 <= ano <= 2012:
             return row['Partido_2008']
         elif 2013 <= ano <= 2016:
             return row['Partido_2012']
