@@ -15,4 +15,4 @@ tces_dataframe['ministerio'] = tces_dataframe['ministerio'].astype(str)
 dataframe_unificado = pd.merge(convenios_dataframe, tces_dataframe, on=[
                                'ministerio', 'ano_referencia', 'partido_ano_referencia', 'media_distancia_ideologica'], how='outer')
 
-dataframe_unificado.to_excel('./bases_unificadas_relacao_gov_federal.xlsx', index=False)
+dataframe_unificado.to_excel('./bases_unificadas_relacao_minist.xlsx', index=False)
