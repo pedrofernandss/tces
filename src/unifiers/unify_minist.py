@@ -1,9 +1,9 @@
 import pandas as pd
 
-url = '../database/aggregated/tces_aggregated_minist.parquet'
+url = './database/aggregated/tces_aggregated_minist.parquet'
 tces_dataframe = pd.read_parquet(url)
 
-url = '../database/aggregated/convenios_aggregated_minist.parquet'
+url = './database/aggregated/convenios_aggregated_minist.parquet'
 convenios_dataframe = pd.read_parquet(url)
 
 convenios_dataframe['ano_referencia'] = convenios_dataframe['ano_referencia'].astype('Int64')
